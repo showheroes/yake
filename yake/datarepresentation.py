@@ -13,7 +13,7 @@ STOPWORD_WEIGHT = 'bi'
 
 class DataCore(object):
     
-    def __init__(self, text, stopword_set, windowsSize, n, tagsToDiscard = set(['u', 'd']), exclude = set(string.punctuation)):
+    def __init__(self, text, stopword_set, windowsSize, n, tagsToDiscard = set(['u', 'd']), exclude = set(string.punctuation), min_term_length: int = 3):
         self.number_of_sentences = 0
         self.number_of_words = 0
         self.terms = {}
@@ -23,6 +23,7 @@ class DataCore(object):
         self.G = nx.DiGraph()
         self.exclude = exclude
         self.tagsToDiscard = tagsToDiscard
+        self.min_term_length = min_term_length
         self.freq_ns = {}
         for i in range(n):
             self.freq_ns[i+1] = 0.
@@ -156,7 +157,7 @@ class DataCore(object):
         for pontuation in self.exclude:
             simples_unique_term = simples_unique_term.replace(pontuation, '')
         # until here
-        isstopword = simples_sto or unique_term in self.stopword_set or len(simples_unique_term) < 3
+        isstopword = simples_sto or unique_term in self.stopword_set or len(simples_unique_term) < self.min_term_length
         
         term_id = len(self.terms)
         term_obj = single_word(unique_term, term_id, self.G)

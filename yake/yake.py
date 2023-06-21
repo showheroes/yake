@@ -11,7 +11,7 @@ from .datarepresentation import DataCore
 
 class KeywordExtractor(object):
 
-    def __init__(self, lan="en", n=3, dedupLim=0.9, dedupFunc='seqm', windowsSize=1, top=20, features=None, stopwords=None):
+    def __init__(self, lan="en", n=3, dedupLim=0.9, dedupFunc='seqm', windowsSize=1, top=20, features=None, stopwords=None, min_term_length: int = 3):
         self.lan = lan
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -39,6 +39,7 @@ class KeywordExtractor(object):
         self.dedupLim = dedupLim
         self.features = features
         self.windowsSize = windowsSize
+        self.min_term_length = min_term_length
         if dedupFunc == 'jaro_winkler' or dedupFunc == 'jaro':
             self.dedu_function = self.jaro
         elif dedupFunc.lower() == 'sequencematcher' or dedupFunc.lower() == 'seqm':
@@ -61,7 +62,7 @@ class KeywordExtractor(object):
                 return []
 
             text = text.replace('\n\t',' ')
-            dc = DataCore(text=text, stopword_set=self.stopword_set, windowsSize=self.windowsSize, n=self.n)
+            dc = DataCore(text=text, stopword_set=self.stopword_set, windowsSize=self.windowsSize, n=self.n, min_term_length=self.min_term_length)
             dc.build_single_terms_features(features=self.features)
             dc.build_mult_terms_features(features=self.features)
             resultSet = []
