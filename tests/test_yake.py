@@ -126,19 +126,19 @@ def test_n1_EL():
 
 def test_min_term_length():
     text_content = 'ai'
-    pyake = yake.KeywordExtractor(lan="en", n=1, min_term_length=3)
+    pyake = yake.KeywordExtractor(min_term_length=3)
     result = pyake.extract_keywords(text_content)
     assert not result
-    pyake = yake.KeywordExtractor(lan="en", n=1, min_term_length=2)
+    pyake = yake.KeywordExtractor(min_term_length=2)
     result = pyake.extract_keywords(text_content)
     assert result
 
 def test_web_tokenizer_flag():
     text_content = 'ツイッター'
-    pyake = yake.KeywordExtractor(lan="ja", n=1, web_tokenizer_flag=True)
+    pyake = yake.KeywordExtractor(lan="ja", web_tokenizer_flag=True)
     result = pyake.extract_keywords(text_content)
     assert result[0][0] == "ツイッタ"
-    pyake = yake.KeywordExtractor(lan="ja", n=1, web_tokenizer_flag=False)
+    pyake = yake.KeywordExtractor(lan="ja", web_tokenizer_flag=False)
     result = pyake.extract_keywords(text_content)
     assert result[0][0] == "ツイッター"
     
