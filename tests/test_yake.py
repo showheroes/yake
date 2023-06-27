@@ -136,6 +136,16 @@ def test_min_term_length():
     result = pyake.extract_keywords(text_content)
     assert result
 
+def test_tokenizer_for_continuous_script_langs():
+    text_content = 'ツイッター'
+    pyake = yake.KeywordExtractor(lan="en", n=1)
+    result = pyake.extract_keywords(text_content)
+    assert result[0][0] == "ツイッタ"
+    pyake = yake.KeywordExtractor(lan="ja", n=1)
+    result = pyake.extract_keywords(text_content)
+    assert result[0][0] == "ツイッター"
+    
+
 test_phraseless_example()
 test_null_and_blank_example()
 test_n1_EN()
