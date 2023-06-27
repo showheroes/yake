@@ -12,9 +12,17 @@ import re
 STOPWORD_WEIGHT = 'bi'
 
 class DataCore(object):
-    
-    def __init__(self, lan, text, stopword_set, windowsSize, n, tagsToDiscard = set(['u', 'd']), exclude = set(string.punctuation), min_term_length: int = 3):
-        self.lan = lan
+    def __init__(
+        self,
+        text,
+        stopword_set,
+        windowsSize,
+        n,
+        tagsToDiscard = set(['u', 'd']),
+        exclude = set(string.punctuation),
+        min_term_length: int = 3,
+        web_tokenizer_flag: bool = True,
+    ):
         self.number_of_sentences = 0
         self.number_of_words = 0
         self.terms = {}
@@ -25,6 +33,7 @@ class DataCore(object):
         self.exclude = exclude
         self.tagsToDiscard = tagsToDiscard
         self.min_term_length = min_term_length
+        self.web_tokenizer_flag = web_tokenizer_flag
         self.freq_ns = {}
         for i in range(n):
             self.freq_ns[i+1] = 0.
@@ -49,10 +58,26 @@ class DataCore(object):
     # Build the datacore features
     def _build(self, text, windowsSize, n):
         text = self.pre_filter(text)
-        if self.lan in ["ja", "zh", "th"]:
-            self.sentences_str = [ [w for w in split_contractions(s.split()) if not (w.startswith("'") and len(w) > 1) and len(w) > 0] for s in list(split_multi(text)) if len(s.strip()) > 0]
+        if self.web_tokenizer_flag:
+            self.sentences_str = [
+                [
+                    w
+                    for w in split_contractions(web_tokenizer(s))
+                    if not (w.startswith("'") and len(w) > 1) and len(w) > 0
+                ]
+                for s in list(split_multi(text))
+                if len(s.strip()) > 0
+            ]
         else:
-            self.sentences_str = [ [w for w in split_contractions(web_tokenizer(s)) if not (w.startswith("'") and len(w) > 1) and len(w) > 0] for s in list(split_multi(text)) if len(s.strip()) > 0]
+            self.sentences_str = [
+                [
+                    w
+                    for w in split_contractions(s.split())
+                    if not (w.startswith("'") and len(w) > 1) and len(w) > 0
+                ]
+                for s in list(split_multi(text))
+                if len(s.strip()) > 0
+            ]
         self.number_of_sentences = len(self.sentences_str)
         pos_text = 0
         block_of_word_obj = []

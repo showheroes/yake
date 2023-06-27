@@ -136,12 +136,12 @@ def test_min_term_length():
     result = pyake.extract_keywords(text_content)
     assert result
 
-def test_tokenizer_for_continuous_script_langs():
+def test_web_tokenizer_flag():
     text_content = 'ツイッター'
-    pyake = yake.KeywordExtractor(lan="en", n=1)
+    pyake = yake.KeywordExtractor(lan="ja", n=1, web_tokenizer_flag=True)
     result = pyake.extract_keywords(text_content)
     assert result[0][0] == "ツイッタ"
-    pyake = yake.KeywordExtractor(lan="ja", n=1)
+    pyake = yake.KeywordExtractor(lan="ja", n=1, web_tokenizer_flag=False)
     result = pyake.extract_keywords(text_content)
     assert result[0][0] == "ツイッター"
     
@@ -153,4 +153,4 @@ test_n3_EN()
 test_n3_PT()
 test_n1_EL()
 test_min_term_length()
-test_tokenizer_for_continuous_script_langs()
+test_web_tokenizer_flag()
