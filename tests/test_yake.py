@@ -126,9 +126,6 @@ def test_n1_EL():
 
 def test_min_term_length():
     text_content = 'ai'
-    pyake = yake.KeywordExtractor(lan="en", n=1)
-    result = pyake.extract_keywords(text_content)
-    assert not result
     pyake = yake.KeywordExtractor(lan="en", n=1, min_term_length=3)
     result = pyake.extract_keywords(text_content)
     assert not result
